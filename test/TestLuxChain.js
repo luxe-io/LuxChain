@@ -42,16 +42,27 @@ contract('LuxChain', function (accounts) {
         assert.equal(validRe, false)
     })
 
-    // it('Non-admin cannot add asset to system', async () => {
-    //     var owner = accounts[3];
-    //     var assetNumber = "1234";
-    //     let price = 1000
-    //     try {
-    //         await this.bikeChain.addBike(assetNumber, {from: owner, value: price});
-    //     } catch (error) {
-    //         Error = error;
-    //     }
-    // })
+    it('Non-admin cannot add asset to system', async () => {
+        var owner = accounts[3];
+        var assetNumber = "1234";
+        let price = 1000
+        try {
+            await this.bikeChain.addBike(assetNumber, {from: owner, value: price});
+        } catch (error) {
+            Error = error;
+        }
+    })
+
+    it('Non-admin cannot add asset to system', async () => {
+        var owner = accounts[3];
+        var assetNumber = "1234";
+        let price = 1000
+        try {
+            await this.bikeChain.addBike(assetNumber, {from: owner, value: price});
+        } catch (error) {
+            Error = error;
+        }
+    })
 
     it('Admin can add asset to system', async () => {
         console.log("Admin can add asset to system")
@@ -76,6 +87,35 @@ contract('LuxChain', function (accounts) {
         assert.notEqual(item[0], "0x0", "Owners not equal");
     })
 
+    it('Cannot add a duplicate asset for the assetNumber that exist on the blockchain', async () => {
+        console.log("Admin can add asset to system")
+        console.log("-------------*****************-------------")
+        console.log("")
+
+        const item = await this.luxChain.getAsset("1234")
+        console.log("Asset Information")
+        console.log(item)
+
+        var owner = accounts[0];
+        var assetNumber = "1234";
+        let price = 1000
+
+        await this.luxChain.changeAdminSwitch(true)
+        const isAdmin = await this.luxChain.getAdminSwitch()
+        console.log("Current Account:" + owner)
+        assert.equal(isAdmin, true)
+
+        try {
+            await this.luxChain.addAsset(assetNumber, {from: owner, value: price});
+        } catch (error) {
+            Error = error;
+        }
+
+        assert.notEqual(Error, undefined, 'Error must be thrown');
+        assert.isAbove(Error.message.search('VM Exception while processing transaction: revert'), -1, 'Error: VM Exception while processing transaction: revert');
+    })
+
+
     it('Transfer ownership of Asset to another user', async () => {
         console.log("Transfer ownership of Asset to another user")
         console.log("-------------*****************-------------")
@@ -92,7 +132,6 @@ contract('LuxChain', function (accounts) {
         let item = await this.luxChain.getAsset("1234")
         console.log("Asset Information Before Transfer")
         console.log(item)
-
 
         await this.luxChain.transferOwner(assetNumber, newOwner);
         console.log("---------------------------------")
