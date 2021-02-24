@@ -40,37 +40,37 @@ contract LuxChain {
         coupon[msg.sender] = false;
     }
 
-    modifier onlyAdmin(){
+    modifier onlyAdmin() {
         if (adminSwitch) require(company[msg.sender]);
         _;
     }
 
-    modifier onlyAdminOrOwner(string _assetNumber){
+    modifier onlyAdminOrOwner(string _assetNumber) {
         require((adminSwitch && (company[msg.sender])) || register[_assetNumber].owner == msg.sender);
         _;
     }
 
-    modifier onlyCompany(){
+    modifier onlyCompany() {
         require(company[msg.sender]);
         _;
     }
 
-    modifier onlyCompanyOrOwner(string _assetNumber){
+    modifier onlyCompanyOrOwner(string _assetNumber) {
         require(company[msg.sender] || (register[_assetNumber].owner == msg.sender));
         _;
     }
 
-    modifier onlyContractCreator(){
+    modifier onlyContractCreator() {
         require(msg.sender == creator);
         _;
     }
 
-    modifier AssetOwner(string _assetNumber){
+    modifier AssetOwner(string _assetNumber) {
         require(register[_assetNumber].owner == msg.sender);
         _;
     }
 
-    modifier hasApproval(string _assetNumber){
+    modifier hasApproval(string _assetNumber) {
         require(approvedAddress[_assetNumber] == msg.sender);
         _;
     }
@@ -103,17 +103,19 @@ contract LuxChain {
         totalSupply = 0;
     }
 
-    function getSender() constant public returns (address){
+    function getSender() constant public returns (address) {
         return msg.sender;
     }
 
-    function getEthBalance() constant public returns (uint) {return address(this).balance;}
+    function getEthBalance() constant public returns (uint) {
+        return address(this).balance;
+    }
 
     function name() constant public returns (string){
         return contractName;
     }
 
-    function symbol() constant public returns (string){
+    function symbol() constant public returns (string) {
         return contractSymbol;
     }
 
@@ -146,7 +148,6 @@ contract LuxChain {
         }
         delete fn[fn.length - 1];
         fn.length--;
-
         emit AssetTransferred(oldOwner, msg.sender, _assetNumber);
     }
 
@@ -161,11 +162,10 @@ contract LuxChain {
         }
         delete fn[fn.length - 1];
         fn.length--;
-
         emit AssetTransferred(msg.sender, _to, _assetNumber);
     }
 
-    function tokenOfOwnerByIndex(address _owner, uint256 _index) constant public returns (string assetNumber){
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) constant public returns (string assetNumber) {
         require(_index < balanceOf(_owner));
         require(_index >= 0);
         assetNumber = ownerList[_owner][_index];
@@ -265,7 +265,6 @@ contract LuxChain {
         delete fn[fn.length - 1];
         fn.length--;
         totalSupply--;
-
         emit AssetRemoved(msg.sender, owner, _assetNumber);
     }
 
@@ -281,7 +280,7 @@ contract LuxChain {
         emit OwnerChanged(msg.sender, _newOwner);
     }
 
-    function changeAdminSwitch(bool _status) public onlyContractCreator returns (bool){
+    function changeAdminSwitch(bool _status) public onlyContractCreator returns (bool) {
         adminSwitch = _status;
         emit AdminSwitchChanged(_status);
         return adminSwitch;
@@ -289,7 +288,8 @@ contract LuxChain {
 
     // Get functions
     function getAsset(string _assetNumber) constant public
-    returns (address owner, string details, bool stolen, bool found, string ipfsHash){
+
+    returns (address owner, string details, bool stolen, bool found, string ipfsHash) {
 
         Asset storage b = register[_assetNumber];
         owner = b.owner;
@@ -299,7 +299,7 @@ contract LuxChain {
         ipfsHash = b.ipfsHash;
     }
 
-    function getAssetIndex(address _owner, string _assetNumber) constant public returns (uint i){
+    function getAssetIndex(address _owner, string _assetNumber) constant public returns (uint i) {
         string[] storage fn = ownerList[_owner];
         for (i = 0; i < fn.length; i++) {
             if (keccak256(abi.encode(fn[i])) == keccak256(abi.encode(_assetNumber))) return i;
@@ -308,19 +308,24 @@ contract LuxChain {
         // Fail if not found
     }
 
-    function getassetNumber(address _owner, uint _index) constant public returns (string assetNumber){
+    function getassetNumber(address _owner, uint _index) constant public returns (string assetNumber) {
         require(_index < ownerList[_owner].length);
         assetNumber = ownerList[_owner][_index];
     }
 
-    function isCompany(address _companyAdd) constant public returns (bool){
+    function isCompany(address _companyAdd) constant public returns (bool) {
         return company[_companyAdd];
     }
 
-    function getEthDonated() constant public returns (uint) {return donated;}
+    function getEthDonated() constant public returns (uint) {
+        return donated;
+    }
 
-    function getAdminSwitch() constant public returns (bool) {return adminSwitch;}
+    function getAdminSwitch() constant public returns (bool) {
+        return adminSwitch;
+    }
 
-    function getRegistrationPrice() constant public returns (uint)
-    {return registrationPrice;}
+    function getRegistrationPrice() constant public returns (uint) {
+        return registrationPrice;
+    }
 }
