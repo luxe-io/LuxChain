@@ -12,7 +12,6 @@ contract('LuxChain', function (accounts) {
         assert.notEqual(address, '')
         assert.notEqual(address, null)
         assert.notEqual(address, undefined)
-        console.log("TEST")
     })
 
     it('TestContract balance should starts with 0 ETH', async () => {
@@ -55,6 +54,9 @@ contract('LuxChain', function (accounts) {
     // })
 
     it('Admin can add asset to system', async () => {
+        console.log("Admin can add asset to system")
+        console.log("-------------*****************-------------")
+        console.log("")
 
         var owner = accounts[0];
         var assetNumber = "1234";
@@ -62,7 +64,7 @@ contract('LuxChain', function (accounts) {
 
         await this.luxChain.changeAdminSwitch(true)
         const isAdmin = await this.luxChain.getAdminSwitch()
-        console.log(accounts[0])
+        console.log("Current Account:" + owner)
         assert.equal(isAdmin, true)
 
         await this.luxChain.addAsset(assetNumber, {from: owner, value: price});
@@ -73,4 +75,32 @@ contract('LuxChain', function (accounts) {
         assert.equal(item[0], owner, "Owners not equal");
         assert.notEqual(item[0], "0x0", "Owners not equal");
     })
+
+    it('Transfer ownership of Asset to another user', async () => {
+        console.log("Transfer ownership of Asset to another user")
+        console.log("-------------*****************-------------")
+        console.log("")
+        var owner = accounts[0];
+        var newOwner = accounts[1];
+        var assetNumber = "1234";
+        let price = 1000
+        console.log("Current Account:" + owner)
+        console.log("New Account:" + newOwner)
+        console.log("")
+        await this.luxChain.changeAdminSwitch(true)
+        const isAdmin = await this.luxChain.getAdminSwitch()
+        let item = await this.luxChain.getAsset("1234")
+        console.log("Asset Information Before Transfer")
+        console.log(item)
+
+
+        await this.luxChain.transferOwner(assetNumber, newOwner);
+        console.log("---------------------------------")
+        item = await this.luxChain.getAsset("1234")
+        console.log("Asset Information After Transfer")
+        console.log(item)
+        assert.equal(item[0], newOwner, "Owners not equal");
+        assert.notEqual(item[0], "0x0", "Owners not equal");
+    })
+
 });
