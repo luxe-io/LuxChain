@@ -12,7 +12,7 @@ contract LuxChain {
         address owner;
         bool stolen;
         bool found;
-        string founddetails;
+        string foundDetails;
         string ipfsHash;
     }
 
@@ -83,7 +83,7 @@ contract LuxChain {
     event Approval(address owner, address to, string assetNumber);
     event AssetCreated(string assetNumber);
     event AssetRemoved(address company, address owner, string assetNumber);
-    event AssetTransfered(address from, address to, string assetNumber);
+    event AssetTransferred(address from, address to, string assetNumber);
     event AssetStolen(string assetNumber, string details);
     event AssetFound(address finder, string assetNumber);
     event AssetNotFound(address finder, string assetNumber);
@@ -147,7 +147,7 @@ contract LuxChain {
         delete fn[fn.length - 1];
         fn.length--;
 
-        emit AssetTransfered(oldOwner, msg.sender, _assetNumber);
+        emit AssetTransferred(oldOwner, msg.sender, _assetNumber);
     }
 
     function transfer(address _to, string _assetNumber) AssetOwner(_assetNumber) public {
@@ -162,7 +162,7 @@ contract LuxChain {
         delete fn[fn.length - 1];
         fn.length--;
 
-        emit AssetTransfered(msg.sender, _to, _assetNumber);
+        emit AssetTransferred(msg.sender, _to, _assetNumber);
     }
 
     function tokenOfOwnerByIndex(address _owner, uint256 _index) constant public returns (string assetNumber){
@@ -196,7 +196,7 @@ contract LuxChain {
         b.owner = msg.sender;
         b.stolen = false;
         b.found = false;
-        b.founddetails = "";
+        b.foundDetails = "";
         totalSupply++;
         donated = donated + msg.value;
         emit AssetCreated(_assetNumber);
@@ -219,13 +219,13 @@ contract LuxChain {
         require(register[_assetNumber].stolen);
         Asset storage b = register[_assetNumber];
         b.found = true;
-        b.founddetails = _details;
+        b.foundDetails = _details;
         emit AssetFound(msg.sender, _assetNumber);
     }
 
     function reportNotFound(string _assetNumber) AssetOwner(_assetNumber) public {
         register[_assetNumber].found = false;
-        register[_assetNumber].founddetails = "";
+        register[_assetNumber].foundDetails = "";
         emit AssetNotFound(msg.sender, _assetNumber);
     }
 
@@ -235,7 +235,7 @@ contract LuxChain {
         Asset storage b = register[_assetNumber];
         b.stolen = false;
         b.found = false;
-        b.founddetails = "";
+        b.foundDetails = "";
         emit AssetReturned(msg.sender, _assetNumber);
     }
 
@@ -251,7 +251,7 @@ contract LuxChain {
         delete fn[fn.length - 1];
         fn.length--;
 
-        emit AssetTransfered(msg.sender, _newOwner, _assetNumber);
+        emit AssetTransferred(msg.sender, _newOwner, _assetNumber);
     }
 
     function removeAsset(string _assetNumber) onlyAdminOrOwner(_assetNumber) public {
@@ -293,7 +293,7 @@ contract LuxChain {
 
         Asset storage b = register[_assetNumber];
         owner = b.owner;
-        details = b.founddetails;
+        details = b.foundDetails;
         stolen = b.stolen;
         found = b.found;
         ipfsHash = b.ipfsHash;
