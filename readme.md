@@ -7,5 +7,3 @@ Make sure to have truffle/gunash running..
 `truffle migrate --reset`
 <br>
 `truffle test`
-
-//TODO - Will add more things to this when i get more time 
